@@ -2,8 +2,8 @@ var _data = require('./../../data');
 var _tokens = require('./../tokens');
 
 // Required data: email
-// Cleanup old checks associated with the user
-var Delete = function(data, callback){
+// Cleanup old orders associated with the user
+function Delete (data, callback){
   // Check that email is valid
   var email = typeof(data.queryStringObject.email) == 'string' && data.queryStringObject.email.trim().length == 10 ? data.queryStringObject.email.trim() : false;
   if(email){
@@ -38,14 +38,14 @@ function deleteRead (err, userData){
 
 function deleteUsersDelete (err){
   if(!err){
-    // Delete each of the checks associated with the user
-    var userChecks = typeof(userData.checks) == 'object' && userData.checks instanceof Array ? userData.checks : [];
-    var checksToDelete = userChecks.length;
-    if(checksToDelete > 0){
-      var checksDeleted = 0;
+    // Delete each of the orders associated with the user
+    var userOrders = typeof(userData.orders) == 'object' && userData.orders instanceof Array ? userData.orders : [];
+    var ordersToDelete = userOrders.length;
+    if(ordersToDelete > 0){
+      var ordersDeleted = 0;
       var deletionErrors = false;
-      // Loop through the checks
-      userChecks.forEach(deleteForEachCheck);
+      // Loop through the orders
+      userOrders.forEach(deleteForEachCheck);
     } else {
       callback(200);
     }
@@ -56,19 +56,19 @@ function deleteUsersDelete (err){
 
 function deleteForEachCheck (checkId){
   // Delete the check
-  _data.delete('checks', checkId, deleteChecksDelete);
+  _data.delete('orders', checkId, deleteOrdersDelete);
 };
 
-function deleteChecksDelete (err){
+function deleteOrdersDelete (err){
   if(err){
     deletionErrors = true;
   }
-  checksDeleted++;
-  if(checksDeleted == checksToDelete){
+  ordersDeleted++;
+  if(ordersDeleted == ordersToDelete){
     if(!deletionErrors){
       callback(200);
     } else {
-      callback(500,{'Error' : "Errors encountered while attempting to delete all of the user's checks. All checks may not have been deleted from the system successfully."})
+      callback(500,{'Error' : "Errors encountered while attempting to delete all of the user's orders. All orders may not have been deleted from the system successfully."})
     }
   }
 };

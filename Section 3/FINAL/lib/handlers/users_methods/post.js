@@ -8,7 +8,7 @@ var helpers = require('./../../helpers');
 // Users - post
 // Required data: fullName, address, email, password
 // Optional data: none
-var Post = function(data, callback){
+function Post (data, callback){
   // Check that all required fields are filled out
   var fullName = typeof(data.payload.fullName) == 'string' && data.payload.fullName.trim().length > 0 ? data.payload.fullName.trim() : false;
   var address = typeof(data.payload.address) == 'string' && data.payload.address.trim().length > 0 ? data.payload.address.trim() : false;

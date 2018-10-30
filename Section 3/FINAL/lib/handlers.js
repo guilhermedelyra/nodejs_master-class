@@ -1,10 +1,13 @@
 /*
  * Request Handlers
- *
  */
 
+ var _tokens = require('./handlers/tokens');
+ var _orders = require('./handlers/orders');
+ var _users = require('./handlers/users');
+
 // Define all the handlers
-var handlers = {};
+var handlers = {_users, _orders, _tokens};
 
 // Ping
 handlers.ping = function(data,callback){
@@ -39,14 +42,15 @@ handlers.tokens = function(data,callback){
 };
 
 // Checks
-handlers.checks = function(data,callback){
+handlers.orders = function(data,callback){
   var acceptableMethods = ['post','get','put','delete'];
   if(acceptableMethods.indexOf(data.method) > -1){
-    handlers._checks[data.method](data,callback);
+    handlers._orders[data.method](data,callback);
   } else {
     callback(405);
   }
 };
 
+console.log(handlers);
 // Export the handlers
 module.exports = handlers;

@@ -4,7 +4,7 @@ var _tokens = require('./../tokens');
 
 // Required data: email
 // Optional data: fullName, address, password (at least one must be specified)
-var Put = function(data, callback){
+function Put (data, callback){
   var email = typeof(data.payload.email) == 'string' && data.payload.email.trim().length == 10 ? data.payload.email.trim() : false;
   var fullName = typeof(data.payload.fullName) == 'string' && data.payload.fullName.trim().length > 0 ? data.payload.fullName.trim() : false;
   var address = typeof(data.payload.address) == 'string' && data.payload.address.trim().length > 0 ? data.payload.address.trim() : false;

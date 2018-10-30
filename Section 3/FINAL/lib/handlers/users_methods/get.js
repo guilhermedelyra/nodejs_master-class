@@ -3,7 +3,7 @@ var _tokens = require('./../tokens');
 
 // Required data: email
 // Optional data: none
-var Get = function(data, callback){
+function Get (data, callback){
   var email = typeof(data.queryStringObject.email) == 'string' && data.queryStringObject.email.trim().length == 10 ? data.queryStringObject.email.trim() : false;
   if(email){
     var token = typeof(data.headers.token) == 'string' ? data.headers.token : false;
