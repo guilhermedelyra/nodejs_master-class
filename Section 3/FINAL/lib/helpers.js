@@ -33,20 +33,44 @@ helpers.hash = function(str){
 };
 
 // Create a string of random alphanumeric characters, of a given length
-helpers.createRandomString = function(strLength){
+helpers.createRandomString = function(strLength, dir){
   strLength = typeof(strLength) == 'number' && strLength > 0 ? strLength : false;
   if(strLength){
     // Define all the possible characters that could go into a string
+    _data.list('checks',function(err,checks){
+      if(!err && checks && checks.length > 0){
+        checks.forEach(function(check){
+          // Read in the check data
+          _data.read('checks',check,function(err,originalCheckData){
+            if(!err && originalCheckData){
+              // Pass it to the check validator, and let that function continue the function or log the error(s) as needed
+              workers.validateCheckData(originalCheckData);
+            } else {
+              debug("Error reading one of the check's data: ",err);
+            }
+          });
+        });
+      } else {
+        debug('Error: Could not find any checks to process');
+      }
+    });
+    var orders = _data.list('orders');
+    var tokens = _data.list('tokens');
+    var allGeneratedIds = [...orders, ...tokens];
+
     var possibleCharacters = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
     // Start the final string
     var str = '';
-    for(i = 1; i <= strLength; i++) {
-        // Get a random charactert from the possibleCharacters string
-        var randomCharacter = possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length));
-        // Append this character to the string
-        str+=randomCharacter;
-    }
+    do {
+      str = '';
+      for(i = 1; i <= strLength; i++) {
+          // Get a random charactert from the possibleCharacters string
+          var randomCharacter = possibleCharacters.charAt(Math.floor(Math.random() * possibleCharacters.length));
+          // Append this character to the string
+          str+=randomCharacter;
+      }
+    } while (allGeneratedIds.indexOf(str) != -1);
     // Return the final string
     return str;
   } else {
@@ -109,7 +133,6 @@ helpers.sendTwilioSms = function(phone,msg,callback){
     callback('Given parameters were missing or invalid');
   }
 };
-
 
 // Export the module
 module.exports = helpers;
